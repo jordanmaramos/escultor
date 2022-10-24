@@ -1,7 +1,20 @@
+/**
+ * @file	sculptor.cpp
+ * @brief	Implementação dos métodos da classe Sculptor, tais como
+ *  construtor, destrutor e outros.
+ * @author	Jordan Marques
+ * @author  Pedro Rêgo
+ * @date	10/2022
+ */
+
 #include <iostream>
 #include <fstream>
 #include "sculptor.h"
 
+/**
+ * @brief Classe Sculptor
+ * @details	Construtor da classe Sculptor.
+ */
 Sculptor::Sculptor(int _nx, int _ny, int _nz)
 {
     this->nx = _nx;
@@ -32,6 +45,9 @@ Sculptor::Sculptor(int _nx, int _ny, int _nz)
     }
 }
 
+/**
+ * @details	Destrutor da classe Sculptor.
+ */
 Sculptor :: ~Sculptor()
 {
     for(int i=0; i<this->nx; i++){
@@ -40,19 +56,24 @@ Sculptor :: ~Sculptor()
         }
         delete[] this->v[i];
     }
-    delete[] this->v ;
+    delete[] this->v;
 }
 
-void Sculptor :: setColor(float _r, float _g, float _b, float a)
+/**
+ * @details	Método que define a cor do objeto.
+ */
+void Sculptor :: setColor(float r, float g, float b, float a)
 {
-    this->r = _r;
-    this->g = _g;
-    this->b = _b;
+    this->r = r;
+    this->g = g;
+    this->b = b;
     this->a = a; 
     std :: cout << "Cor selecionada!" << std :: endl;
 }
 
-
+/**
+ * @details	Método que define as cores do voxel e ativa o voxel na posição (x, y, z).
+ */
 void Sculptor :: putVoxel(int x, int y, int z)
 {
     this->v[x][y][z].r = this->r;
@@ -62,11 +83,17 @@ void Sculptor :: putVoxel(int x, int y, int z)
     this->v[x][y][z].isOn = true;
 }
 
+/**
+ * @details	Método que desativa o voxel na posição (x, y, z).
+ */
 void Sculptor :: cutVoxel(int x, int y, int z)
 {
     this->v[x][y][z].isOn = false;
 }
 
+/**
+ * @details	Método que desenha um cubo, ativando os voxels de acordo com as coordenadas fornecidas.
+ */
 void Sculptor :: putBox(int x0, int x1, int y0, int y1, int z0, int z1)
 {
     for (int i=x0; i<x1; i++){
@@ -78,6 +105,9 @@ void Sculptor :: putBox(int x0, int x1, int y0, int y1, int z0, int z1)
     }
 }
 
+/**
+ * @details	Método que corta/elimina um cubo, desativando os voxels de acordo com as coordenadas fornecidas.
+ */
 void Sculptor :: cutBox(int x0, int x1, int y0, int y1, int z0, int z1)
 {
     for(int i=x0; i<x1; i++){
@@ -89,11 +119,14 @@ void Sculptor :: cutBox(int x0, int x1, int y0, int y1, int z0, int z1)
     }
 }
 
-void Sculptor::putSphere(int xcenter, int ycenter, int zcenter, int radius){
+/**
+ * @details	Método que desenha uma esfera, ativando os voxels de acordo com o raio fornecido.
+ */
+void Sculptor::putSphere(int xcenter, int ycenter, int zcenter, int radius)
+{
    float r;
-
    for(int i=0; i<this->nx; i++){
-       for(int  j=0; j<this->ny; j++){
+       for(int j=0; j<this->ny; j++){
            for(int k=0; k<this->nz; k++){
                r = ((i-xcenter)*(i-xcenter))+((j-ycenter)*(j-ycenter))+((k-zcenter)*(k-zcenter));
                if(r <= (radius*radius)){
@@ -104,42 +137,17 @@ void Sculptor::putSphere(int xcenter, int ycenter, int zcenter, int radius){
    }
 }
 
-void Sculptor::cutSphere(int xcenter, int ycenter, int zcenter, int radius){
-   float r;
-
-   for(int i=0; i<this->nx; i++){
-       for(int j=0; j<this->ny; j++){
+/**
+ * @details	Método que faz um corte em formato de esfera, desativando os voxels de acordo com o raio fornecido.
+ */
+void Sculptor::cutSphere(int xcenter, int ycenter, int zcenter, int radius)
+{
+    float r;
+    for(int i=0; i<this->nx; i++){
+        for(int j=0; j<this->ny; j++){
            for(int k=0; k<this->nz; k++){
-               r = ((i-xcenter)*(i-xcenter))+((j-ycenter)*(j-ycenter))+((k-zcenter)*(k-zcenter));
-               if(r <= (radius*radius)){
-                   this->cutVoxel(i,j,k);
-               }
-           }
-       }
-   }
-}
-
-void Sculptor::putEllipsoid(int xcenter, int ycenter, int zcenter, int rx, int ry, int rz){
-    float elipse;
-    for(int i=(xcenter-rx); i<=(xcenter+rx); i++){
-        for(int j=(ycenter-ry); j<=(ycenter+ry); j++){
-            for(int k=(zcenter-rz); k<=(zcenter+rz); k++){
-                elipse = ((i - xcenter) * (i - xcenter))/(rx*rx) + ((j - ycenter) * (j - ycenter))/(ry*ry) + ((k - zcenter) * (k - zcenter))/(rz*rz);
-                if(elipse <= 1){
-                    this->putVoxel(i,j,k);
-                }
-            }
-        }
-    }
-}
-
-void Sculptor::cutEllipsoid(int xcenter, int ycenter, int zcenter, int rx, int ry, int rz){
-    float elipse;
-    for(int i=(xcenter-rx); i<=(xcenter+rx); i++){
-        for(int j=(ycenter-ry); j<=(ycenter+ry); j++){
-            for(int k=(zcenter-rz); k<=(zcenter+rz); k++){
-                elipse = ((i - xcenter) * (i - xcenter))/(rx*rx) + ((j - ycenter) * (j - ycenter))/(ry*ry) + ((k - zcenter) * (k - zcenter))/(rz*rz);
-                if(elipse <= 1){
+                r = ((i-xcenter)*(i-xcenter))+((j-ycenter)*(j-ycenter))+((k-zcenter)*(k-zcenter));
+                if(r <= (radius*radius)){
                     this->cutVoxel(i,j,k);
                 }
             }
@@ -147,6 +155,53 @@ void Sculptor::cutEllipsoid(int xcenter, int ycenter, int zcenter, int rx, int r
     }
 }
 
+/**
+ * @details	Método que desenha um elipse, ativando os voxels de acordo com as dimensões fornecidas.
+ */
+void Sculptor::putEllipsoid(int xcenter, int ycenter, int zcenter, int rx, int ry, int rz)
+{
+    float elipse;
+
+    for (int k=(zcenter-rz); k<=(zcenter+rz); k++){
+        for (int i=(ycenter-ry); i<=(ycenter+ry); i++) {
+            for (int j=(xcenter-rx); j<=(xcenter+rx); j++) {
+                elipse = ((((i-ycenter)/(float)ry)*((i-ycenter)/(float)ry))+
+                   (((j-xcenter)/(float)rx)*((j-xcenter)/(float)rx))+
+                   (((k-zcenter)/(float)rz)*((k-zcenter)/(float)rz)));
+
+                if (elipse <= 1){
+                    this->putVoxel(k,i,j);
+                }
+            }
+        }
+    }
+}
+
+/**
+ * @details	Método que faz um corte em formato de elipse, desativando os voxels de acordo com as dimensões fornecidas.
+ */
+void Sculptor::cutEllipsoid(int xcenter, int ycenter, int zcenter, int rx, int ry, int rz)
+{
+    float elipse;
+
+    for (int k=(zcenter-rz); k<=(zcenter+rz); k++){
+        for (int i=(ycenter-ry); i<=(ycenter+ry); i++) {
+            for (int j=(xcenter-rx); j<=(xcenter+rx); j++) {
+                elipse = ((((i-ycenter)/(float)ry)*((i-ycenter)/(float)ry))+
+                   (((j-xcenter)/(float)rx)*((j-xcenter)/(float)rx))+
+                   (((k-zcenter)/(float)rz)*((k-zcenter)/(float)rz)));
+
+                if (elipse <= 1){
+                    this->cutVoxel(k,i,j);
+                }
+            }
+        }
+    }
+}
+
+/**
+ * @details	Método que gera o arquivo .off para exibição da figura.
+ */
 void Sculptor :: writeOFF(const char* filename)
 {
     std::ofstream fout;

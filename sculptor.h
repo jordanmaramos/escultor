@@ -1,13 +1,31 @@
+/**
+ * @file	sculptor.h
+ * @brief	Definição da classe Sculptor, com atributos e métodos.
+ * @author	Jordan Marques
+ * @author  Pedro Rêgo
+ * @date	10/2022
+ */
+
+
 #ifndef SCULPTOR_H
 #define SCULPTOR_H
 #include <string>
 
+/**
+ * @struct Voxel
+ * @details Estrutura com as propriedades do voxel: cor, sua transparência, e estado de inclusão.
+ */
 struct Voxel {
   float r,g,b; // Colors
   float a;     // Transparency
   bool isOn;   // Included or not
 };
 
+/**
+ * @class   Sculptor 
+ * @brief   Classe que representa o escultor.
+ * @details  Atributos do escultor, tais como: a matriz 3D de voxels, dimensões da matriz e cores. 
+ * */
 class Sculptor {
 private:
   Voxel ***v;     // 3D matrix
